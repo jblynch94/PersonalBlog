@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PersonalBlog.Data;
 using PersonalBlog.Models;
+using PersonalBlog.Services;
+using PersonalBlog.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = DataUtility.GetConnectionString(builder.Configuration);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
@@ -20,7 +22,18 @@ builder.Services.AddIdentity<BlogUser, IdentityRole>(options => options.SignIn.R
 
 builder.Services.AddMvc();
 
+//Custom Services
+builder.Services.AddScoped<IImageService, ImageService>();
+
+builder.Services.AddScoped<IBlogPostService, BlogPostService>();
+
+//--------------
+
+
 var app = builder.Build();
+var scope = app.Services.CreateScope();
+await DataUtility.SeedDataAsync(scope.ServiceProvider);
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

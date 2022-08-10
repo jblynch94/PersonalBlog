@@ -86,7 +86,7 @@ namespace PersonalBlog.Data
                     EmailConfirmed = true
 
                 };
-                await userManager.CreateAsync(adminUser, "Abc&123!");
+                await userManager.CreateAsync(adminUser, configuration["AdminPwd"]);
                 await userManager.AddToRoleAsync(adminUser, _adminRole);
             }
 
@@ -104,7 +104,7 @@ namespace PersonalBlog.Data
                     EmailConfirmed = true
 
                 };
-                await userManager.CreateAsync(modUser, "Abc&123!");
+                await userManager.CreateAsync(modUser, configuration["ModeratorPwd"]);
                 await userManager.AddToRoleAsync(modUser, _modRole);
             }
 
