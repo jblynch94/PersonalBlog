@@ -43,6 +43,9 @@
                @Html.DisplayNameFor(model => model.BlogPostImage)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Tags)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Category)
             </th>
             <th></th>
@@ -76,7 +79,11 @@
                 @Html.DisplayFor(modelItem => item.IsPublished)
             </td>
             <td>
+                
              <img src="@ImageService.ConvertByteArrayToFile(item.ImageData!, item.ImageType!)" class="square-img rounded-start" style="width: 50px; height:50px;" alt="...">
+            </td>
+            <td>
+                @item.Tags.Count
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Category.Name)

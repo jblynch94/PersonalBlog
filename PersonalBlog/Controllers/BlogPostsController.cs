@@ -32,7 +32,8 @@ namespace PersonalBlog.Controllers
         // GET: BlogPosts
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.BlogPosts.Include(b => b.Category);
+            var applicationDbContext = _context.BlogPosts.Include(b => b.Category)
+                                                         .Include(b=>b.Tags);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -46,6 +47,7 @@ namespace PersonalBlog.Controllers
 
             var blogPost = await _context.BlogPosts
                 .Include(b => b.Category)
+                .Include(b => b.Tags)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (blogPost == null)
             {
@@ -69,7 +71,7 @@ namespace PersonalBlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId,Abstract,IsPublished,BlogPostImage")] BlogPost blogPost, List<int> TagList)
+        public async Task<IActionResult> Create([Bind("Id,Title,Content,CategoryId,Abstract,IsPublished,ImageData,ImageType,BlogPostImage")] BlogPost blogPost, List<int> TagList)
         {
             if (ModelState.IsValid)
             {
@@ -85,6 +87,7 @@ namespace PersonalBlog.Controllers
                     ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
                     return View();
                 }
+
                 blogPost.Slug = blogPost.Title!.Slugify();
 
                 //image
@@ -95,7 +98,17 @@ namespace PersonalBlog.Controllers
                 }
 
                 _context.Add(blogPost);
+                
+
+
+
+                foreach(int tagId in TagList)
+                {
+                    blogPost.Tags.Add(_context.Tags.Find(tagId)!);
+                }
+                _context.Add(blogPost);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["TagList"] = new MultiSelectList(_context.Tags, "Id", "Name");
@@ -110,17 +123,16 @@ namespace PersonalBlog.Controllers
             {
                 return NotFound();
             }
-            
 
-            var blogPost = await _context.BlogPosts!.Where(c => c.Id == id)
-                                            .FirstOrDefaultAsync();
+
+            var blogPost = await _context.BlogPosts.Include(b => b.Tags).FirstOrDefaultAsync(b => b.Id == id);
 
             //var blogPost = await _context.BlogPosts.FindAsync(id);
             if (blogPost == null)
             {
                 return NotFound();
             }
-            ViewData["TagList"] = new MultiSelectList(_context.Tags, "Id", "Name");
+            ViewData["TagList"] = new MultiSelectList(_context.Tags, "Id", "Name",blogPost.Tags.Select(t=>t.Id));
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", blogPost.CategoryId);
             return View(blogPost);
         }
@@ -130,7 +142,7 @@ namespace PersonalBlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Content,Created,LastUpdated,CategoryId,Slug,Abstract,IsDeleted,IsPublished,BlogPostImage")] BlogPost blogPost, List<int> TagList)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Content,Created,LastUpdated,CategoryId,Slug,Abstract,IsDeleted,IsPublished,ImageData,ImageType,BlogPostImage")] BlogPost blogPost, List<int> TagList)
         {
             if (id != blogPost.Id)
             {
@@ -150,8 +162,30 @@ namespace PersonalBlog.Controllers
                     blogPost.LastUpdated = DataUtility.GetPostGresDate(DateTime.Now);
 
                     _context.Update(blogPost);
+
+                    List<Tag> tags = (await _blogPostService.GetBlogPostTagsAsync(blogPost.Id)).ToList();
+                    //Version 1
+                    //List<Tag> tags = _context.Tags.Where(t=>t.BlogPosts.Contains(blogPost)).ToList();
+                    //Version 2
+                    //List<Tag> tags = _context.BlogPosts.FirstOrDefault(b=>b.Id == blogPost.Id)!.Tags.ToList();
+
+
+                    foreach (Tag tag in tags)
+                    {
+                        await _blogPostService.RemoveTagFromBlogPostAsync(tag.Id, blogPost.Id);
+
+                    }
+
+                    //blogPost.Tags.Clear();
+
+                    foreach (int tagId in TagList)
+                    {
+                        await _blogPostService.AddTagToBlogPostAsync(tagId, blogPost.Id);
+
+                    }
                     await _context.SaveChangesAsync();
                 }
+
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!BlogPostExists(blogPost.Id))
@@ -180,6 +214,7 @@ namespace PersonalBlog.Controllers
 
             var blogPost = await _context.BlogPosts
                 .Include(b => b.Category)
+                
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (blogPost == null)
             {

@@ -48,5 +48,68 @@ namespace PersonalBlog.Services
             }
             
         }
+        public async Task<bool> IsTagInBlogPostAsync(int tagId, int blogPostId)
+        {
+            try
+            {
+                Tag? tag = await _context.Tags.FindAsync(tagId);
+
+                return (await _context.BlogPosts.FirstOrDefaultAsync(c => c.Id == blogPostId))!.Tags.Contains(tag!);
+                                     
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public async Task AddTagToBlogPostAsync(int tagId, int blogPostId)
+        {
+            try
+            {
+                //check to see if the catecgory has already been added
+                if (!await IsTagInBlogPostAsync(tagId, blogPostId))
+                {
+                    //add the category to the database
+                    BlogPost? blogPost = await _context.BlogPosts.FindAsync(blogPostId);
+                    Tag? tag = await _context.Tags.FindAsync(tagId);
+
+                    if (blogPost != null && tag != null)
+                    {
+                        blogPost.Tags.Add(tag);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        public async Task RemoveTagFromBlogPostAsync(int tagId, int blogPostId)
+        {
+            //Remove the category to the database
+            BlogPost? blogPost = await _context.BlogPosts.FindAsync(blogPostId);
+            Tag? tag = await _context.Tags.FindAsync(tagId);
+
+            if (blogPost != null && tag != null)
+            {
+                blogPost.Tags.Remove(tag);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<IEnumerable<Tag>> GetBlogPostTagsAsync(int blogPostId)
+        {
+            try
+            {
+                BlogPost? blogPost = await _context.BlogPosts.Include(c => c.Tags)
+                                                         .FirstOrDefaultAsync(c => c.Id == blogPostId);
+                return blogPost!.Tags;
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }
