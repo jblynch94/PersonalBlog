@@ -11,7 +11,7 @@ namespace PersonalBlog.Extentions
             string output = phrase.RemoveAccents().ToLower();
 
             //remove all special characters from the string
-            output = Regex.Replace(output, @"[A-Za-z0-9\s-]", "");
+            output = Regex.Replace(output, @"[^A-Za-z0-9\s-]", "");
 
             //remove all additional spaces in favor of just one
             output = Regex.Replace(output, @"\s+", " ").Trim();

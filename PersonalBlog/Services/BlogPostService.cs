@@ -111,5 +111,74 @@ namespace PersonalBlog.Services
                 throw;
             }
         }
+        public async Task<List<Category>> GetCategoriesAsync()
+        {
+            {
+                List<Category> categories = new List<Category>();
+
+                try
+                {
+                    categories = await _context.Categories.ToListAsync();
+                }
+                catch
+                {
+                    throw;
+                }
+                return categories;
+            }
+        }
+
+        public async Task<List<BlogPost>> GetAllBlogPostAsync(int count)
+        {
+            {
+                List<BlogPost> blogPost = new List<BlogPost>();
+
+                try
+                {
+                    blogPost = await _context.BlogPosts.ToListAsync();
+                }
+                catch
+                {
+                    throw;
+                }
+                return blogPost;
+            }
+        }
+
+        public async Task<List<BlogPost>> GetPopularBlogPostAsync(int count)
+        {
+            {
+                List<BlogPost> blogPost = new List<BlogPost>();
+
+                try
+                {
+                    blogPost = await _context.BlogPosts.OrderBy(c=>c.Comments.Count)
+                                                       .ToListAsync();
+                }
+                catch
+                {
+                    throw;
+                }
+                return blogPost;
+            }
+        }
+
+        public async Task<List<BlogPost>> GetRecentBlogPostsAsync(int count)
+        {
+            {
+                List<BlogPost> blogPost = new List<BlogPost>();
+
+                try
+                {
+                    blogPost = await _context.BlogPosts.OrderBy(c => c.Created)
+                                                       .ToListAsync();
+                }
+                catch
+                {
+                    throw;
+                }
+                return blogPost;
+            }
+        }
     }
 }
