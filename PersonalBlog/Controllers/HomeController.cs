@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PersonalBlog.Data;
 using PersonalBlog.Models;
+using PersonalBlog.Services.Interfaces;
 using System.Diagnostics;
 
 namespace PersonalBlog.Controllers
@@ -10,21 +11,20 @@ namespace PersonalBlog.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly IBlogPostService _blogPostService;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, IBlogPostService blogPostService)
         {
             _logger = logger;
             _context = context;
+            _blogPostService = blogPostService;
         }
 
         public async Task<IActionResult> AuthorPage()
         {
             //TODO: create service to get blogposts
 
-            List<BlogPost> posts =await _context.BlogPosts.Include(b=>b.Comments)
-                                                          .Include(b=>b.Category)
-                                                          .Include(b=>b.Tags)
-                                                          .ToListAsync();
+            List<BlogPost> posts = (await _blogPostService.GetAllBlogPostAsync()).Where(b=>b.IsPublished ==true).ToList();
 
 
             return View(posts);

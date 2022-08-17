@@ -10,6 +10,7 @@ using PersonalBlog.Data;
 using PersonalBlog.Extentions;
 using PersonalBlog.Models;
 using PersonalBlog.Services.Interfaces;
+using X.PagedList;
 
 namespace PersonalBlog.Controllers
 {
@@ -20,8 +21,9 @@ namespace PersonalBlog.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IBlogPostService _blogPostService;
         public BlogPostsController(ApplicationDbContext context,
-            IImageService imageService, UserManager<BlogUser> userManager, 
-            IBlogPostService blogPostService)
+                                    IImageService imageService,
+                                    UserManager<BlogUser> userManager, 
+                                    IBlogPostService blogPostService)
         {
             _context = context;
             _imageService = imageService;
@@ -35,6 +37,18 @@ namespace PersonalBlog.Controllers
             var applicationDbContext = _context.BlogPosts.Include(b => b.Category)
                                                          .Include(b=>b.Tags);
             return View(await applicationDbContext.ToListAsync());
+        }
+        public async Task<IActionResult> SearchIndex(string searchTerm, int? pageNum)
+        {
+
+            int pageSize = 4;
+            int page = pageNum ?? 1;
+
+            ViewData["searchTerm"] = searchTerm;
+
+            IPagedList<BlogPost> blogPosts = await _blogPostService.Search(searchTerm).ToPagedListAsync(page,pageSize); 
+
+            return View(blogPosts);
         }
 
         // GET: BlogPosts/Details/5
@@ -79,7 +93,7 @@ namespace PersonalBlog.Controllers
             if (ModelState.IsValid)
             {
                 //date
-                blogPost.Created = DataUtility.GetPostGresDate(blogPost.Created);
+                blogPost.Created = DataUtility.GetPostGresDate(DateTime.Now);
                 blogPost.LastUpdated = DataUtility.GetPostGresDate(DateTime.Now);
 
                 //slug
@@ -113,7 +127,7 @@ namespace PersonalBlog.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TagList"] = new MultiSelectList(_context.Tags, "Id", "Name");
+            ViewData["TagList"] = new MultiSelectList(_context.Tags, "Id", "Name", TagList);
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", blogPost.CategoryId);
             return View(blogPost);
         }

@@ -128,20 +128,26 @@ namespace PersonalBlog.Services
             }
         }
 
-        public async Task<List<BlogPost>> GetAllBlogPostAsync(int count)
+        public async Task<List<BlogPost>> GetAllBlogPostAsync()
         {
             {
-                List<BlogPost> blogPost = new List<BlogPost>();
+                 
 
                 try
                 {
-                    blogPost = await _context.BlogPosts.ToListAsync();
+                    List<BlogPost> blogPost = await _context.BlogPosts
+                                                       .Where(b=>b.IsDeleted==false)
+                                                       .Include(b => b.Comments)
+                                                          .ThenInclude(b => b.Author)
+                                                       .Include(b => b.Category)
+                                                       .Include(b => b.Tags)
+                                                       .ToListAsync();
+                    return blogPost;
                 }
                 catch
                 {
                     throw;
                 }
-                return blogPost;
             }
         }
 
@@ -152,14 +158,18 @@ namespace PersonalBlog.Services
 
                 try
                 {
-                    blogPost = await _context.BlogPosts.OrderBy(c=>c.Comments.Count)
+                    blogPost = await _context.BlogPosts.Include(b => b.Comments)
+                                                          .ThenInclude(b => b.Author)
+                                                       .Include(b => b.Category)
+                                                       .Include(b => b.Tags)
                                                        .ToListAsync();
+
+                    return blogPost.OrderByDescending(b=>b.Comments.Count).Take(count).ToList();
                 }
                 catch
                 {
                     throw;
                 }
-                return blogPost;
             }
         }
 
@@ -170,14 +180,62 @@ namespace PersonalBlog.Services
 
                 try
                 {
-                    blogPost = await _context.BlogPosts.OrderBy(c => c.Created)
+                    blogPost = await _context.BlogPosts.Include(b => b.Comments)
+                                                          .ThenInclude(b => b.Author)
+                                                       .Include(b => b.Category)
+                                                       .Include(b => b.Tags)
                                                        .ToListAsync();
+
+                    return blogPost.OrderByDescending(b => b.Created).Take(count).ToList(); ;
                 }
                 catch
                 {
                     throw;
                 }
-                return blogPost;
+            }
+        }
+
+        public IEnumerable<BlogPost> Search(string SearchString)
+        {
+            try
+            {
+                IEnumerable<BlogPost> blogPost = new List<BlogPost>();
+
+                if(string.IsNullOrWhiteSpace(SearchString))
+                {
+                    return blogPost;
+                }
+                else
+                {
+                    SearchString = SearchString.Trim().ToLower();
+
+                    blogPost = _context.BlogPosts.Where(b=>b.Title!.ToLower().Contains(SearchString) ||
+                                                           b.Abstract!.ToLower().Contains(SearchString) ||
+                                                           b.Content!.ToLower().Contains(SearchString) ||
+                                                           b.Category!.Name!.ToLower().Contains(SearchString) ||
+                                                           b.Comments.Any(
+                                                               c=>c.Body!.ToLower().Contains(SearchString) ||
+                                                                  c.Author!.FirstName!.ToLower().Contains(SearchString) ||
+                                                                  c.Author.LastName!.ToLower().Contains(SearchString)) ||
+                                                           b.Tags.Any(t=>t.Name!.ToLower().Contains(SearchString)))
+                                                 .Include(b=>b.Comments)
+                                                     .ThenInclude(c=>c.Author)
+                                                 .Include(b=>b.Category)
+                                                 .Include(b=>b.Tags)
+                                                 .Where(b=>b.IsDeleted == false && b.IsPublished == true)
+                                                 .AsNoTracking()
+                                                 .OrderByDescending(b=>b.Created)
+                                                 .AsEnumerable();
+
+                    return blogPost;
+                                                 
+
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
         }
     }
