@@ -1,4 +1,13 @@
-﻿<!doctype html>
+﻿@using Microsoft.AspNetCore.Identity
+@using PersonalBlog.Enums
+@using PersonalBlog.Services.Interfaces
+
+
+@inject IImageService _imageService
+@inject UserManager<BlogUser> _userManager
+
+
+<!doctype html>
 <html class="no-js" lang="en">
 
 <head>
@@ -25,7 +34,7 @@
 </head>
 
 <body>
-
+    <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("AuthorPage","Home",new{area=""})"></form>
     <div class="main-wrapper">
         <div class="mouse-cursor cursor-outer"></div>
         <div class="mouse-cursor cursor-inner"></div>
@@ -51,7 +60,7 @@
                 <div class="row justify-content-between align-items-center">
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-3 col-12">
                         <div class="logo">
-                            <a href="index.html">
+                            <a asp-controller="Home" asp-action="Index">
                                 <img class="dark-logo" src="~/assets/images/logo/logo-black.png" alt="Blogar logo">
                                 <img class="light-logo" src="~/assets/images/logo/logo-white2.png" alt="Blogar logo">
                             </a>
@@ -68,24 +77,24 @@
                                         <a asp-controller="Home" asp-action="AuthorPage">Home</a>
                                     </li>
                                     <li class="menu-item-has-children">
-                                        <a href="#">Posts</a>
+                                        <a asp-controller="BlogPosts" asp-action="AllPostsIndex">Posts</a>
                                         <ul class="axil-submenu">
                                             <li>
-                                                <a class="hover-flip-item-wrapper" asp-controller="BlogPosts" asp-action="Details">
+                                                <a class="hover-flip-item-wrapper" asp-controller="BlogPosts" asp-action="AllPostsIndex">
                                                     <span class="">
                                                         <span>All Posts</span>
                                                     </span>
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="hover-flip-item-wrapper">
+                                                <a class="hover-flip-item-wrapper" asp-controller="BlogPosts" asp-action="PopularIndex">
                                                     <span class="hover-flip-item">
                                                         <span data-text="Popular Posts">Popular Posts</span>
                                                     </span>
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="hover-flip-item-wrapper">
+                                                <a class="hover-flip-item-wrapper" asp-controller="BlogPosts" asp-action="RecentIndex">
                                                     <span class="hover-flip-item">
                                                         <span data-text="Recent Posts">Recent Posts</span>
                                                     </span>
@@ -101,7 +110,7 @@
                                         </ul>
                                     </li>
                                     <li><a href="home-lifestyle-blog.html">About</a></li>
-                                    <li><a href="home-tech-blog.html">Contact</a></li>
+                                    <li><a asp-controller="Home" asp-action="ContactMe">Contact</a></li>
                                     @if (User.IsInRole("Administrator"))
                                     {
                                         <li class="menu-item-has-children">
@@ -155,7 +164,7 @@
                             </form>
                             <div class="mobile-search-wrapper d-sm-none d-block">
                                 <button class="search-button"><i class="fal fa-search"></i></button>
-                                <form class="header-search-form" >
+                                <form class="header-search-form">
                                     <div class="axil-search form-group">
                                         <button type="submit" class="search-button"><i class="fal fa-search"></i></button>
                                         <input type="text" class="form-control" placeholder="Search">
@@ -163,10 +172,18 @@
                                 </form>
                             </div>
                             <ul class="metabar-block">
-                                <li class="icon"><a href="#"><i class="fas fa-bookmark"></i></a></li>
-                                <li class="icon"><a href="#"><i class="fas fa-bell"></i></a></li>
-                                <li><a href="#"><img src="~/assets/images/others/author.png" alt="Author Images"></a></li>
-                                @*<li class=""><a class="" asp-area="Identity" asp-page="" ></a></li>*@
+                                @if (!User.Identity!.IsAuthenticated)
+                                {
+                                    <li class=""><a class="btn btn-outline-success" asp-area="Identity" asp-page="/Account/Login"><i class="fa fa-sign-in fa-2x" aria-hidden="true"></i></a></li>
+                                }
+                                else
+                                {
+
+                                    BlogUser blogUser = await _userManager.GetUserAsync(User);
+
+                                    <li class=""><a class="btn btn-default" href="javascript:document.getElementById('logoutForm').submit();"><i class="fa fa-sign-out fa-3x" aria-hidden="true"></i></a></li>
+                                    <li><a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><img src="@_imageService.ConvertByteArrayToFile(blogUser.ImageData!,blogUser.ImageType!,(int) DefaultImage.BlogUser)" alt="Author Images"></a></li>
+                                }
                             </ul>
                             <!-- Start Hamburger Menu  -->
                             <div class="hamburger-menu d-block d-xl-none">

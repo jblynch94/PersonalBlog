@@ -1,5 +1,6 @@
 ﻿@model IPagedList<BlogPost>
 
+@using PersonalBlog.Enums
 @using X.PagedList
 @using X.PagedList.Mvc.Core
 @using X.PagedList.Web.Common
@@ -45,7 +46,7 @@
                                                             @* Show Image *@
                                                             @if (blogPost.ImageData != null)
                                                             {
-                                                                <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData,blogPost.ImageType!)" alt="">
+                                                                <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData,blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="">
                                                             }
                                                             else
                                                             {

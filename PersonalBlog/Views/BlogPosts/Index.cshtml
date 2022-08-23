@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<PersonalBlog.Models.BlogPost>
+@using PersonalBlog.Enums
 @using PersonalBlog.Services.Interfaces
 
 @inject IImageService ImageService;
@@ -59,7 +60,7 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Content)
+                @Html.Raw(item.Content)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Created)
@@ -80,8 +81,8 @@
                 @Html.DisplayFor(modelItem => item.IsPublished)
             </td>
             <td>
-                
-             <img src="@ImageService.ConvertByteArrayToFile(item.ImageData!, item.ImageType!)" class="square-img rounded-start" style="width: 50px; height:50px;" alt="...">
+
+                    <img src="@ImageService.ConvertByteArrayToFile(item.ImageData!, item.ImageType!,(int)DefaultImage.BlogPost)" class="square-img rounded-start" style="width: 50px; height:50px;" alt="...">
             </td>
             <td>
                 @item.Tags.Count

@@ -1,6 +1,7 @@
 ﻿@model PersonalBlog.Models.BlogPost
 
 @using Microsoft.AspNetCore.Identity
+@using PersonalBlog.Enums
 @using PersonalBlog.Services.Interfaces
 
 @inject IImageService _ImageService
@@ -328,7 +329,7 @@
                                         <a href="post-details.html">
                                             @if (blogPost.ImageData != null)
                                             {
-                                                <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData,blogPost.ImageType!)" alt="">
+                                                <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData,blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="">
                                             }
                                             else
                                             {

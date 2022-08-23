@@ -5,16 +5,28 @@ namespace PersonalBlog.Services
     public class ImageService : IImageService
     {
 
-        private readonly string _defaultImage = "img/DefaultContactImage.png";
-        public string ConvertByteArrayToFile(byte[] fileData, string extension)
+        private readonly string _defaultBlogPostImage = "/img/DefaultContactImage.png";
+        private readonly string _defaultUserImage = "/img/DefaultContactImage.png";
+        private readonly string _defaultCategoryImage = "/img/DefaultContactImage.png";
+
+        public string ConvertByteArrayToFile(byte[] fileData, string extension, int imageType)
         {
-            if (fileData is null)
+            if (fileData == null || fileData.Length == 0) 
             {
-                return _defaultImage;
+                switch (imageType)
+                {
+                    //BlogUser Image based on the 'defaultImage' enum
+                    case 1: return _defaultUserImage;
+                    //BlogPost Image based on the 'defaultImage' enum
+                    case 2: return _defaultBlogPostImage;
+                    //Category Image based on the 'defaultImage' enum
+                    case 3: return _defaultCategoryImage;
+                }
+                
             }
             try
             {
-                string imageBase64Data = Convert.ToBase64String(fileData);
+                string imageBase64Data = Convert.ToBase64String(fileData!);
                 return string.Format($"data:{extension};base64,{imageBase64Data}");
             }
             catch (Exception)

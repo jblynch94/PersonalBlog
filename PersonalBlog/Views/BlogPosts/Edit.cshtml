@@ -1,4 +1,5 @@
 ﻿@model PersonalBlog.Models.BlogPost
+@using PersonalBlog.Enums
 @using PersonalBlog.Services.Interfaces
 
 @inject IImageService _imageService
@@ -82,7 +83,7 @@
             <div>
                 @if (Model.ImageData != null)
                 {
-                    <img id="imageData" class="img-fluid img-thumbnail" style="width:100px;height:80px" src="@_imageService.ConvertByteArrayToFile(Model.ImageData!,Model.ImageType!)" />
+                    <img id="imageData" class="img-fluid img-thumbnail" style="width:100px;height:80px" src="@_imageService.ConvertByteArrayToFile(Model.ImageData!,Model.ImageType!,(int)DefaultImage.BlogPost)" />
                 }
                 else
                 {

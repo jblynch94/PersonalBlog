@@ -92,21 +92,21 @@ namespace PersonalBlog.Data
 
             //add Moderator
 
-            if (!context.Users.Any(u => u.Email == _modEmail))
-            {
-                BlogUser modUser = new()
-                {
-                    Email = _modEmail,
-                    UserName = _modEmail,
-                    FirstName = "Brock",
-                    LastName = "Lynch",
-                    PhoneNumber = "1234567890",
-                    EmailConfirmed = true
+            //if (!context.Users.Any(u => u.Email == _modEmail))
+            //{
+            //    BlogUser modUser = new()
+            //    {
+            //        Email = _modEmail,
+            //        UserName = _modEmail,
+            //        FirstName = "Brock",
+            //        LastName = "Lynch",
+            //        PhoneNumber = "1234567890",
+            //        EmailConfirmed = true
 
-                };
-                await userManager.CreateAsync(modUser, configuration["ModeratorPwd"]);
-                await userManager.AddToRoleAsync(modUser, _modRole);
-            }
+            //    };
+            //    await userManager.CreateAsync(modUser, configuration["ModeratorPwd"]);
+            //    await userManager.AddToRoleAsync(modUser, _modRole);
+            //}
 
         }
     }

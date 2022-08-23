@@ -4,7 +4,7 @@
     {
         public Task<byte[]> ConvertFileToByteArrayAsync(IFormFile file);
 
-        public string ConvertByteArrayToFile(byte[] fileData, string extention);
+        public string ConvertByteArrayToFile(byte[] fileData, string extention, int imageType);
 
 
     }

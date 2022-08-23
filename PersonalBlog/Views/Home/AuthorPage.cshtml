@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<PersonalBlog.Models.BlogPost>
 
 
+@using PersonalBlog.Enums
 @using PersonalBlog.Services.Interfaces
 
 @inject IImageService _ImageService
@@ -60,14 +61,9 @@
                     <div class="content-block post-list-view mt--30">
                         <div class="post-thumbnail">
                             <a href="post-details.html">
-                                @if (blogPost.ImageData != null)
-                                {
-                                    <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData!, blogPost.ImageType!)" alt="Post Images">
-                                }
-                                else
-                                {
-                                    <img src="~/img/DefaultContactImage.png" alt="Post Images">
-                                }
+                               
+                                    <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData!, blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="Post Images">
+                                
                             </a>
                             @*<a class="video-popup icon-color-secondary size-medium position-top-center" href="post-details.html"><span class="play-icon"></span></a>*@
                         </div>
@@ -126,15 +122,9 @@
                                     <li class="cat-item">
                                         <a href="#" class="inner">
                                             <div class="thumbnail">
-                                                @if (category.ImageData != null)
-                                                {
-                                                    <img src="@_ImageService.ConvertByteArrayToFile(category.ImageData,category.ImageType!)" alt="">
-                                                }
-                                                else
-                                                {
-                                                    <img src="~/img/DefaultContactImage.png" alt="">
-                                                }
-
+                                               
+                                                <img src="@_ImageService.ConvertByteArrayToFile(category.ImageData!,category.ImageType!,(int)DefaultImage.Category)" alt="">
+                                               
                                             </div>
                                             <div class="content">
                                                 <h5 class="title">@category.Name</h5>
@@ -167,14 +157,9 @@
                                     <div class="content-block post-medium mb--20">
                                         <div class="post-thumbnail">
                                             <a href="post-details.html">
-                                                @if (blogPost.ImageData != null)
-                                                {
-                                                    <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData,blogPost.ImageType!)" alt="">
-                                                }
-                                                else
-                                                {
-                                                    <img src="~/img/DefaultContactImage.png" alt="">
-                                                }
+                                               
+                                                    <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData!,blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="Post Images">
+                                              
                                             </a>
                                         </div>
                                         <div class="post-content">
@@ -222,14 +207,9 @@
                                     @foreach(BlogPost blogPost in await _BlogPostService.GetRecentBlogPostsAsync(6)){
                                     <li class="instagram-post-list">
                                         <a href="#">
-                                            @if (blogPost.ImageData != null)
-                                            {
-                                                <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData,blogPost.ImageType!)" alt="">
-                                            }
-                                            else
-                                            {
-                                                <img src="~/img/DefaultContactImage.png" alt="">
-                                            }
+                                            
+                                            <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData!,blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="">
+                                           
                                         </a>
                                     </li>
 
