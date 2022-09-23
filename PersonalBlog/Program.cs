@@ -29,6 +29,8 @@ builder.Services.AddScoped<IImageService, ImageService>();
 
 builder.Services.AddScoped<IBlogPostService, BlogPostService>();
 
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+
 //--------------
 
 builder.Services.AddAuthentication().AddGoogle(googleOptions =>

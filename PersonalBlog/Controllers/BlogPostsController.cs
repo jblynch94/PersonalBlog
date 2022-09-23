@@ -292,7 +292,7 @@ namespace PersonalBlog.Controllers
         {
             //TODO: create service to get blogposts
 
-            List<BlogPost> posts = (await _blogPostService.GetAllBlogPostAsync()).Where(b => b.IsPublished == true).ToList();
+            IPagedList<BlogPost> posts = (await _blogPostService.GetAllBlogPostAsync()).Where(b => b.IsPublished == true).ToPagedList();
 
 
             return View(posts);
@@ -301,7 +301,7 @@ namespace PersonalBlog.Controllers
         {
             //TODO: create service to get blogposts
 
-            List<BlogPost> posts = (await _blogPostService.GetAllBlogPostAsync()).Where(b => b.IsPublished == true).ToList();
+            IPagedList<BlogPost> posts = (await _blogPostService.GetAllBlogPostAsync()).Where(b => b.IsPublished == true).ToPagedList();
 
 
             return View(posts);
@@ -310,7 +310,7 @@ namespace PersonalBlog.Controllers
         {
             //TODO: create service to get blogposts
 
-            List<BlogPost> posts = (await _blogPostService.GetAllBlogPostAsync()).Where(b => b.IsPublished == true).ToList();
+            IPagedList<BlogPost> posts = (await _blogPostService.GetAllBlogPostAsync()).Where(b => b.IsPublished == true).ToPagedList();
 
 
             return View(posts);

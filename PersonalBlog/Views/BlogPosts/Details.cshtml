@@ -101,7 +101,7 @@
                     <!-- Start Blog Details  -->
                     <div class="axil-post-details">
                         <p class="has-medium-font-size">
-                           @Model.Abstract
+                            @Model.Abstract
                         </p>
                         <figure class="wp-block-image alignwide text-center">
                             <img src="~/assets/images/post-single/post-single-06.jpg" alt="Post Images">
@@ -110,9 +110,9 @@
                                 of achievement and excellence.
                             </figcaption>
                         </figure>
-                       <p>
-                           @Model.Content
-                       </p>
+                        <p>
+                            @Model.Content
+                        </p>
 
 
                         <p>For more information on the apps and games, visit the <a href="#">App Store</a>.</p>
@@ -175,69 +175,53 @@
                         </div>
                         <!-- End Author  -->
                         <!-- Start Comment Form Area  -->
-                        <div class="axil-comment-area">
-                            <div class="axil-total-comment-post">
-                                <div class="title">
-                                    <h4 class="mb--0">@Model.Comments.Count Comments</h4>
-                                </div>
-                                <div class="add-comment-button cerchio">
-                                    <a class="axil-button button-rounded" href="post-details.html" tabindex="0"><span>Add Your Comment</span></a>
-                                </div>
-                            </div>
 
+
+
+                        <div class="axil-comment-area">
                             <!-- Start Comment Respond  -->
-                            <div class="comment-respond">
-                                <h4 class="title">Post a comment</h4>
-                                <form action="#">
-                                    <p class="comment-notes">
-                                        <span id="email-notes">
-                                            Your email address will not be
-                                            published.
-                                        </span> Required fields are marked <span class="required">*</span>
-                                    </p>
-                                    <div class="row row--10">
-                                        <div class="col-lg-4 col-md-4 col-12">
-                                            <div class="form-group">
-                                                <label for="name">Your Name</label>
-                                                <input id="name" type="text">
+                           
+                                
+                            @if (_SignInManager.IsSignedIn(User))
+                            {
+                                <div class="comment-respond">
+                                    <h4 class="title">Leave a Comment</h4>
+                                    <form asp-action="Create" asp-controller="Comments" method="post">
+                                        <input type="hidden" asp-for="Id" name="BlogPostId" />
+                                        <input type="hidden" asp-for="Slug" />
+
+                                        <div class="row row--10">
+                                            <div class="col-12">
+                                                <div class="form-group">
+                                                    <label class="control-label">Add a Comment</label>
+                                                    <textarea name="Body" class="form-control" rows="5"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <div class="form-submit cerchio">
+                                                    <input name="submit" type="submit" id="submit" class="axil-button button-rounded" value="Post Comment">
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-4 col-md-4 col-12">
-                                            <div class="form-group">
-                                                <label for="email">Your Email</label>
-                                                <input id="email" type="email">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 col-md-4 col-12">
-                                            <div class="form-group">
-                                                <label for="website">Your Website</label>
-                                                <input id="website" type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="form-group">
-                                                <label for="message">Leave a Reply</label>
-                                                <textarea id="message" name="message"></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-12">
-                                            <p class="comment-form-cookies-consent">
-                                                <input id="wp-comment-cookies-consent" name="wp-comment-cookies-consent" type="checkbox" value="yes">
-                                                <label for="wp-comment-cookies-consent">
-                                                    Save my name, email, and
-                                                    website in this browser for the next time I comment.
-                                                </label>
-                                            </p>
-                                        </div>
-                                        <div class="col-lg-12">
-                                            <div class="form-submit cerchio">
-                                                <input name="submit" type="submit" id="submit" class="axil-button button-rounded" value="Post Comment">
-                                            </div>
-                                        </div>
+                                    </form>
+                                </div>
+                            }
+                            else
+                            {
+                                <!-- End Comment Respond  -->
+                                <div class="axil-total-comment-post">
+                                    <div class="title">
+                                        <h4 class="mb--0">@Model.Comments.Count Comments</h4>
                                     </div>
-                                </form>
-                            </div>
-                            <!-- End Comment Respond  -->
+
+                                    <div class="add-comment-button cerchio">
+                                        <a class="axil-button button-rounded" asp-area="Identity" asp-page="/Account/Login" asp-route-returnurl="@Url.Action("Details","BlogPosts",new {Model.Slug})" tabindex="0"><span>Login to Comment</span></a>
+                                    </div>
+
+                                </div>
+                            }
+
+
                             <!-- Start Comment Area  -->
                             <div class="axil-comment-area">
                                 <h4 class="title">@Model.Comments.Count Comments</h4>
@@ -314,15 +298,15 @@
             </div>
             <div class="row">
 
-              
-                
+
+
                 <!-- Start Stories Post  -->
-                            @foreach (BlogPost blogPost in await _BlogPostService.GetPopularBlogPostAsync(3))
-                            {
-                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                    <!-- Start Post List  -->
-                    <div class="post-stories content-block mt--30">
-                        <div class="post-thumbnail">
+                @foreach (BlogPost blogPost in await _BlogPostService.GetPopularBlogPostAsync(3))
+                {
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                        <!-- Start Post List  -->
+                        <div class="post-stories content-block mt--30">
+                            <div class="post-thumbnail">
                                 <!-- Start Single Post  -->
                                 <div class="content-block post-medium mb--20">
                                     <div class="post-thumbnail">
@@ -353,13 +337,13 @@
                                     </div>
                                 </div>
                                 <!-- End Single Post  -->
-                            
+
+                            </div>
                         </div>
-                        </div>
-                    <!-- End Post List  -->
-                </div>
-                            }
-              
+                        <!-- End Post List  -->
+                    </div>
+                }
+
             </div>
         </div>
     </div>
@@ -377,23 +361,23 @@
             <div class="row mt--30">
                 <div class="col-lg-12">
                     do something here
-                   @* <ul class="instagram-post-list">
-                        @foreach (BlogPost blogPost in await _BlogPostService.GetRecentBlogPostsAsync(6))
-                        {
-                            <li class="instagram-post-list">
-                                <a href="#">
-                                    @if (blogPost.ImageData != null)
-                                    {
-                                        <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData,blogPost.ImageType!)" alt="">
-                                    }
-                                    else
-                                    {
-                                        <img src="~/img/DefaultContactImage.png" alt="">
-                                    }
-                                </a>
-                            </li>
+                    @* <ul class="instagram-post-list">
+                    @foreach (BlogPost blogPost in await _BlogPostService.GetRecentBlogPostsAsync(6))
+                    {
+                    <li class="instagram-post-list">
+                    <a href="#">
+                    @if (blogPost.ImageData != null)
+                    {
+                    <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData,blogPost.ImageType!)" alt="">
+                    }
+                    else
+                    {
+                    <img src="~/img/DefaultContactImage.png" alt="">
+                    }
+                    </a>
+                    </li>
 
-                        }
+                    }
                     </ul>*@
                 </div>
             </div>
