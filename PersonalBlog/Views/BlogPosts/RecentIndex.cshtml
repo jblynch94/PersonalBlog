@@ -27,7 +27,7 @@
                         <div class="comment-respond">
                             <div class="row row-cols-1">
                                 <div class="col">
-                                    <h1>Search Results</h1>
+                                    <h1>Recent Posts</h1>
                                 </div>
                                 <div class="col">
                                     <div class="table-responsive">
@@ -45,19 +45,19 @@
                                                 @foreach (BlogPost blogPost in await _BlogPostService.GetRecentBlogPostsAsync(4))
                                                 {
                                                     <tr>
+
                                                         <td class="col-5">
                                                             @* Show Image *@
-
-                                                            <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData!,blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="">
+                                                            <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
+                                                                <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData!,blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="">
+                                                            </a>
 
                                                         </td>
                                                         <td class="col-7">
-                                                            Title
+                                                            <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug"> @blogPost.Title</a>
                                                         </td>
-                                                        <td>
-                                                            @* Navigate to Details  *@
-                                                            <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">Details</a>
-                                                        </td>
+
+
                                                     </tr>
                                                 }
                                             </tbody>

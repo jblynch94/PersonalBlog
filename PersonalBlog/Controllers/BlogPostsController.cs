@@ -40,12 +40,9 @@ namespace PersonalBlog.Controllers
 
             //todo: use service
 
-            var applicationDbContext = _context.BlogPosts
-                                               .Where(b=>b.IsDeleted)
-                                               .Include(b => b.Category)
-                                               .Include(b=>b.Tags);
+            var applicationDbContext = await _context.BlogPosts.ToListAsync();
 
-            return View(await applicationDbContext.ToListAsync());
+            return View(applicationDbContext);
         }
         [AllowAnonymous]
         public async Task<IActionResult> SearchIndex(string searchTerm, int? pageNum)
@@ -152,7 +149,7 @@ namespace PersonalBlog.Controllers
             }
 
 
-            var blogPost = await _context.BlogPosts.Include(b => b.Tags).FirstOrDefaultAsync(b => b.Id == id);
+            var blogPost = await _context.BlogPosts.FindAsync(id);
 
             //var blogPost = await _context.BlogPosts.FindAsync(id);
             if (blogPost == null)
@@ -278,6 +275,7 @@ namespace PersonalBlog.Controllers
             var blogPost = await _context.BlogPosts.FindAsync(id);
 
             blogPost!.IsDeleted = true;
+            blogPost!.IsPublished = false;
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -288,29 +286,32 @@ namespace PersonalBlog.Controllers
           return (_context.BlogPosts?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> PopularIndex()
         {
             //TODO: create service to get blogposts
 
-            IPagedList<BlogPost> posts = (await _blogPostService.GetAllBlogPostAsync()).Where(b => b.IsPublished == true).ToPagedList();
+            IPagedList<BlogPost> posts = (await _blogPostService.GetPopularBlogPostAsync(3)).ToPagedList();
 
 
             return View(posts);
         }
+        [AllowAnonymous]
         public async Task<IActionResult> RecentIndex()
         {
             //TODO: create service to get blogposts
 
-            IPagedList<BlogPost> posts = (await _blogPostService.GetAllBlogPostAsync()).Where(b => b.IsPublished == true).ToPagedList();
+            IPagedList<BlogPost> posts = (await _blogPostService.GetRecentBlogPostsAsync(0)).ToPagedList();
 
 
             return View(posts);
         }
+        [AllowAnonymous]
         public async Task<IActionResult> AllPostsIndex()
         {
             //TODO: create service to get blogposts
-
-            IPagedList<BlogPost> posts = (await _blogPostService.GetAllBlogPostAsync()).Where(b => b.IsPublished == true).ToPagedList();
+            
+            IPagedList<BlogPost> posts = (await _blogPostService.GetAllBlogPostAsync()).ToPagedList();
 
 
             return View(posts);

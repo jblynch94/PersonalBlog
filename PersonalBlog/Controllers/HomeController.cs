@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PersonalBlog.Data;
@@ -17,17 +18,18 @@ namespace PersonalBlog.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IBlogPostService _blogPostService;
         private readonly UserManager<BlogUser> _userManager;
-        
-        
-        
+        private readonly IEmailSender _emailService;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, IBlogPostService blogPostService, UserManager<BlogUser> userManager)
+
+
+
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, IBlogPostService blogPostService, UserManager<BlogUser> userManager, IEmailSender emailService)
         {
             _logger = logger;
             _context = context;
             _blogPostService = blogPostService;
             _userManager = userManager;
-            
+            _emailService = emailService;
         }
 
         public async Task<IActionResult> AuthorPage()
@@ -49,17 +51,6 @@ namespace PersonalBlog.Controllers
         {
             return View();
         }
-        [Authorize]
-        public IActionResult ContactMe()
-        {
-            EmailData emailData = new EmailData()
-            {
-                EmailAddress = User.Identity!.Name!,
-                Subject = "",
-                
-            };
-            return View(emailData);
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -68,17 +59,30 @@ namespace PersonalBlog.Controllers
         }
 
         [Authorize]
+        public IActionResult ContactMe()
+        {
+            EmailData emailData = new EmailData()
+            {
+                EmailAddress = User.Identity!.Name!,
+                Subject = "",
+                Body = ""
+                
+            };
+            return View(emailData);
+        }
+
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> ContactMe(EmailData data, EmailService emailService)
+        public async Task<IActionResult> ContactMe(EmailData data)
         {
             
             if (ModelState.IsValid)
             {
-
                 
+
                 try
                 {
-                    await emailService.SendEmailAsync(data.EmailAddress, data.Subject, data.Body);
+                    await _emailService.SendEmailAsync(data.EmailAddress, data.Subject, data.Body);
                     return RedirectToAction("ContactMe", "Home", new { swalMessage = "Success: Email Sent!" });
                 }
                 catch

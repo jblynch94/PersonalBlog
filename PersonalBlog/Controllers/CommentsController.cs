@@ -24,9 +24,19 @@ namespace PersonalBlog.Controllers
         }
 
         // GET: Comments
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    var applicationDbContext = _context.Comments.Include(c => c.Author).Include(c => c.BlogPost);
+        //    return View(await applicationDbContext.ToListAsync());
+        //}
+
+        public async Task<IActionResult> Index(int? id)
         {
-            var applicationDbContext = _context.Comments.Include(c => c.Author).Include(c => c.BlogPost);
+            var applicationDbContext = _context.Comments
+                                               .Where(c => c.BlogPostId == id)
+                                               .Include(c => c.Author)
+                                               .Include(c => c.BlogPost);
+
             return View(await applicationDbContext.ToListAsync());
         }
 

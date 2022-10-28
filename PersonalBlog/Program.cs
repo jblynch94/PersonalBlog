@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using PersonalBlog.Data;
@@ -29,6 +30,8 @@ builder.Services.AddScoped<IImageService, ImageService>();
 
 builder.Services.AddScoped<IBlogPostService, BlogPostService>();
 
+builder.Services.AddScoped<IEmailSender, EmailService>();
+
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
 //--------------
@@ -51,7 +54,7 @@ builder.Services.AddSwaggerGen(c =>
         Contact = new OpenApiContact
         {
             Name = "Jacob Lynch",
-            Email = "JacobLynchDev@gmail.com",
+            Email = "jacobbrocklynch@gmail.com",
            
         }
     });

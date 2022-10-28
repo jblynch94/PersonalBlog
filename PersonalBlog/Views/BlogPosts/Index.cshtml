@@ -6,7 +6,7 @@
 
 @{
     ViewData["Title"] = "Index";
-    Layout = null;
+    //Layout = null;
 }
 
 <h1>Index</h1>
@@ -14,7 +14,7 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table container">
     <thead>
         <tr>
             <th>
@@ -75,10 +75,11 @@
                 @Html.DisplayFor(modelItem => item.Abstract)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IsDeleted)
+                @item.IsDeleted
+
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IsPublished)
+                @item.IsPublished
             </td>
             <td>
 
@@ -91,9 +92,10 @@
                 @Html.DisplayFor(modelItem => item.Category!.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
                 <a asp-action="Details" asp-route-slug="@item.Slug">Details</a> 
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-controller="Comments" asp-action="Index" asp-route-id="@item.Id">Comments</a>
             </td>
         </tr>
 }

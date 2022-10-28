@@ -136,7 +136,7 @@ namespace PersonalBlog.Services
                 try
                 {
                     List<BlogPost> blogPost = await _context.BlogPosts
-                                                       .Where(b=>b.IsDeleted==false)
+                                                       .Where(b => b.IsDeleted == false && b.IsPublished == true)
                                                        .Include(b => b.Comments)
                                                           .ThenInclude(b => b.Author)
                                                        .Include(b => b.Category)
@@ -158,7 +158,8 @@ namespace PersonalBlog.Services
 
                 try
                 {
-                    blogPost = await _context.BlogPosts.Include(b => b.Comments)
+                    blogPost = await _context.BlogPosts.Where(b => b.IsDeleted == false && b.IsPublished == true)
+                                                       .Include(b => b.Comments)
                                                           .ThenInclude(b => b.Author)
                                                        .Include(b => b.Category)
                                                        .Include(b => b.Tags)
@@ -180,7 +181,8 @@ namespace PersonalBlog.Services
 
                 try
                 {
-                    blogPost = await _context.BlogPosts.Include(b => b.Comments)
+                    blogPost = await _context.BlogPosts.Where(b => b.IsDeleted == false && b.IsPublished ==true)
+                                                       .Include(b => b.Comments)
                                                           .ThenInclude(b => b.Author)
                                                        .Include(b => b.Category)
                                                        .Include(b => b.Tags)

@@ -9,7 +9,7 @@
             <div class="col-lg-12">
                 <div class="inner">
                     <h1 class="title">Contact Us</h1>
-                    <p class="description">Wherever &#38; whenever you need us. We are here for you – contact us for all your support needs.<br /> be it technical, general queries or information support.</p>
+                    <p class="description">Feel free to reachout!</p>
                 </div>
             </div>
         </div>
@@ -33,29 +33,29 @@
                 <div class="axil-section-gapTop axil-contact-form-area">
                     <h4 class="title mb--10">Send Us a Message</h4>
                     <p class="b3 mb--30">Your email address will not be published. All the fields are required.</p>
-                    <form asp-action="ContactMe" asp-controller="Home" method="POST" class="axil-contact-form contact-form--1 row" enctype="multipart/form-data">
+                    <form asp-controller="Home" asp-action="ContactMe" method="post" class="row">
                         <div class="col-lg-4 col-md-4 col-12">
                             <div class="form-group">
-                                <label asp-for="EmailAddress">EmailAddress</label>
-                                <input asp-for="EmailAddress" type="email" value="@Model.EmailAddress" disabled>
+                                <input asp-for="@Model.EmailAddress" hidden>
+                                <label asp-for="@Model.EmailAddress">EmailAddress</label>
+                                <input asp-for="@Model.EmailAddress" disabled>
                             </div>
                         </div>
-
                         <div class="col-lg-4 col-md-4 col-12">
                             <div class="form-group">
-                                <label>Subject</label>
-                                <input asp-for="Subject" type="text">
+                                <label asp-for="@Model.Subject">Subject</label>
+                                <input asp-for="@Model.Subject"/>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label asp-for="Body">Your Message</label>
-                                <textarea asp-for="Body" rows="5"></textarea>
+                                <label asp-for="@Model.Body">Your Message</label>
+                                <textarea asp-for="@Model.Body" rows="5"></textarea>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-submit">
-                                <button name="submit" type="submit" id="submit" class="axil-button button-rounded btn-primary">Submit</button>
+                                <button type="submit" class="btn axil-button button-rounded btn-primary">Submit</button>
                             </div>
                         </div>
                     </form>

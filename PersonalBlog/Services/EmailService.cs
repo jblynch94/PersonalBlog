@@ -27,9 +27,11 @@ namespace PersonalBlog.Services
             MimeMessage newEmail = new();
             newEmail.Sender = MailboxAddress.Parse(email);
 
-            
-                newEmail.To.Add(MailboxAddress.Parse(emailSender));
-            
+            foreach (var emailAddress in email.Split(';'))
+            {
+                newEmail.To.Add(MailboxAddress.Parse(emailAddress));
+            }
+
             //add the subject for the email
             newEmail.Subject = subject;
 
