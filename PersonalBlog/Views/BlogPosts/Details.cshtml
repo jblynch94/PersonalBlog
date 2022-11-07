@@ -66,13 +66,13 @@
                                             <div class="post-meta-wrapper">
                                                 <div class="post-meta">
                                                     <div class="post-author-avatar border-rounded">
-                                                        <img src="~/assets/images/post-images/author/author-image-3.png" alt="Author Images">
+                                                        <img src="~/img/PlaceHolder_992.jpg" style="height: 50px;" alt="Author Images">
                                                     </div>
                                                     <div class="content">
                                                         <h6 class="post-author-name">
                                                             <a class="hover-flip-item-wrapper" href="author.html">
                                                                 <span class="hover-flip-item">
-                                                                    <span data-text="Ismat Jahan">Ismat Jahan</span>
+                                                                    <span data-text="Jacob Brock Lynch">Jacob Brock Lynch</span>
                                                                 </span>
                                                             </a>
                                                         </h6>
@@ -83,10 +83,7 @@
                                                     </div>
                                                 </div>
                                                 <ul class="social-share-transparent justify-content-end">
-                                                    <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                                                    <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                                                    <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                                    <li><a href="#"><i class="fas fa-link"></i></a></li>
+                                                    <li><a href="linkedin.com/in/jacob-brock-lynch-669930137"><i class="fab fa-linkedin-in"></i></a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -104,10 +101,9 @@
                             @Model.Abstract
                         </p>
                         <figure class="wp-block-image alignwide text-center">
-                            <img src="~/assets/images/post-single/post-single-06.jpg" alt="Post Images">
+                            <img src="@_ImageService.ConvertByteArrayToFile(Model.ImageData!, Model.ImageType!,(int)DefaultImage.BlogPost)" alt="Post Images">
                             <figcaption>
-                                The Apple Design Award trophy, created by the Apple Design team, is a symbol
-                                of achievement and excellence.
+                                
                             </figcaption>
                         </figure>
                         <p>
@@ -115,7 +111,7 @@
                         </p>
 
 
-                        <p>For more information on the apps and games, visit the <a href="#">App Store</a>.</p>
+                        
 
                         <div class="tagcloud">
                             @foreach (Tag tags in Model.Tags)
@@ -125,14 +121,8 @@
                         </div>
 
                         <div class="social-share-block">
-                            <div class="post-like">
-                                <a href="#"><i class="fal fa-thumbs-up"></i><span>2.2k Like</span></a>
-                            </div>
                             <ul class="social-icon icon-rounded-transparent md-size">
-                                <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                                <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                                <li><a href="linkedin.com/in/jacob-brock-lynch-669930137"><i class="fab fa-linkedin-in"></i></a></li>
                             </ul>
                         </div>
 
@@ -141,7 +131,7 @@
                             <div class="media">
                                 <div class="thumbnail">
                                     <a href="#">
-                                        <img src="~/assets/images/post-images/author/author-b1.png" alt="Author Images">
+                                        <img src="~/img/PlaceHolder_992.jpg" style="height: 200px;" alt="Author Images">
                                     </a>
                                 </div>
                                 <div class="media-body">
@@ -149,18 +139,15 @@
                                         <h5 class="title">
                                             <a class="hover-flip-item-wrapper" href="#">
                                                 <span class="hover-flip-item">
-                                                    <span data-text="Rahabi Ahmed Khan">Rahabi Ahmed Khan</span>
+                                                    <span data-text="Jacob Brock Lynch">Jacob Brock Lynch</span>
                                                 </span>
                                             </a>
                                         </h5>
-                                        <span class="b3 subtitle">Sr. UX Designer</span>
+                                        <span class="b3 subtitle">Jr. Software Developer</span>
                                     </div>
                                     <div class="content">
                                         <p class="b1 description">
-                                            At 29 years old, my favorite compliment is being
-                                            told that I look like my mom. Seeing myself in her image, like this
-                                            daughter up top, makes me so proud of how far I’ve come, and so thankful
-                                            for where I come from.
+                                            I am a junior software developer that uses the .NET framework. I have created many web applicatations you can see my work by going to my portfolio just click the About tab in the menu.
                                         </p>
                                         <ul class="social-share-transparent size-md">
                                             <li><a href="#"><i class="far fa-envelope"></i></a></li>
@@ -231,7 +218,7 @@
                                             <div class="comment-body">
                                                 <div class="single-comment">
                                                     <div class="comment-img">
-                                                        <img src="~/assets/images/post-images/author/author-b2.png" alt="Author Images">
+                                                        <img src=@_ImageService.ConvertByteArrayToFile(comment.Author!.ImageData!,comment.Author.ImageType!,(int) DefaultImage.BlogUser) style="height: 50px;border-radius:50%;"  alt="Author Images">
                                                     </div>
                                                     <div class="comment-inner">
                                                         <h6 class="commenter">
@@ -247,7 +234,7 @@
                                                             <div class="time-spent">
                                                                 @comment.Created.ToString("MMM dd, yyyy")
                                                             </div>
-                                                            <div class="reply-edit">
+                                                            @*<div class="reply-edit">
                                                                 <div class="reply">
                                                                     <a class="comment-reply-link hover-flip-item-wrapper" href="#">
                                                                         <span class="hover-flip-item">
@@ -255,7 +242,7 @@
                                                                         </span>
                                                                     </a>
                                                                 </div>
-                                                            </div>
+                                                            </div>*@
                                                         </div>
                                                         <div class="comment-text">
                                                             <p class="b2">
@@ -346,7 +333,7 @@
     </div>
     <!-- End More Stories Area  -->
     <!-- Start Instagram Area  -->
-    <div class="axil-instagram-area axil-section-gap bg-color-extra03">
+    @*<div class="axil-instagram-area axil-section-gap bg-color-extra03">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -354,8 +341,8 @@
                         <h2 class="title">Instagram</h2>
                     </div>
                 </div>
-            </div>
-            <div class="row mt--30">
+            </div>*@
+            @*<div class="row mt--30">
                 <div class="col-lg-12">
                     do something here
                     @* <ul class="instagram-post-list">
@@ -375,9 +362,9 @@
                     </li>
 
                     }
-                    </ul>*@
+                    </ul>
                 </div>
-            </div>
+            </div>*@
         </div>
     </div>
     <!-- End Instagram Area  -->
