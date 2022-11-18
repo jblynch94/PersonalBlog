@@ -30,7 +30,7 @@
                                 <p class="b1 description">I am a junior software developer that uses the .NET framework. I have created many web applicatations you can see my work by going to my portfolio just click the About tab in the menu.</p>
                                 <ul class="social-share-transparent size-md">
                                     <li><a asp-controller="Home" asp-action="ContactMe"><i class="far fa-envelope"></i></a></li>
-                                    <li><a href="linkedin.com/in/jacob-brock-lynch-669930137"><i class="fab fa-linkedin-in"></i></a></li>
+                                    <li><a href="https://www.linkedin.com/in/jacob-brock-lynch-669930137" target="_blank"><i class="fab fa-linkedin-in"></i></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -158,7 +158,7 @@
                                     <!-- Start Single Post  -->
                                     <div class="content-block post-medium mb--20">
                                         <div class="post-thumbnail">
-                                            <a href="post-details.html">
+                                            <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
 
                                                 <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData!,blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="Post Images">
 
@@ -166,7 +166,7 @@
                                         </div>
                                         <div class="post-content">
                                             <h6 class="title">
-                                                <a href="post-details.html">
+                                                <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
                                                     @blogPost.Title
                                                 </a>
                                             </h6>
@@ -205,7 +205,7 @@
                                 @foreach (BlogPost blogPost in await _BlogPostService.GetRecentBlogPostsAsync(6))
                                 {
                                     <li class="instagram-post-list">
-                                        <a href="#">
+                                        <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
 
                                             <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData!,blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="">
 
