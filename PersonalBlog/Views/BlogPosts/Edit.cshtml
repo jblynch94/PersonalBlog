@@ -8,7 +8,8 @@
     ViewData["Title"] = "Edit";
     //Layout = null;
 }
-
+<link rel="stylesheet" type="text/css" href="~/ckeditor5-35/sample/styles.css" />
+<div class="container">
 <h1>Edit</h1>
 
 <h4>BlogPost</h4>
@@ -100,9 +101,28 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-
+</div>
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script src="~/ckeditor5-35/build/ckeditor.js"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('.editor'), {
+                licenseKey: '',
+
+            })
+            .then(editor => {
+                window.editor = editor;
+
+
+            })
+            .catch(error => {
+                console.error('Oops, something went wrong!');
+                console.error('Please, report the following error on https://github.com/ckeditor/ckeditor5/issues with the build id and the error stack trace:');
+                console.warn('Build id: xx09iayzufkn-lkt434h3lx2z');
+                console.error(error);
+            });
+    </script>
     }

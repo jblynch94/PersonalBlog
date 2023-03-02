@@ -10,80 +10,224 @@
 @inject IBlogPostService _BlogPostService
 
 
-
-<!-- Start Post Single Wrapper  -->
-<div class="post-single-wrapper axil-section-gap bg-color-white">
+<!-- Start Post List Wrapper  -->
+<div class="axil-post-list-area axil-section-gap bg-color-white">
     <div class="container">
         <div class="row">
-            <div class="col-lg-10 offset-lg-1">
-                <div class="axil-post-details">
-                    <div class="tagcloud">
-                        @* Show Tags for all Blogs found in search *@
-                        @*@foreach(Tag tag in Model.Tags){
+            <div class="col-lg-12">
+                <div class="page-title">
+                    <h2 class="title mb--40">All Posts</h2>
+                </div>
+            </div>
+            <div class="col-lg-8 col-xl-8">
+                @foreach (BlogPost blogPost in await _BlogPostService.GetPopularBlogPostAsync(10))
+                {
 
-                        }*@
-                    </div>
-                    <div class="axil-comment-area">
-                        <div class="comment-respond">
-                            <div class="row row-cols-1">
-                                <div class="col">
-                                    <h1>Popular Posts</h1>
+                    <!-- Start Post List  -->
+                    <div class="content-block post-list-view mt--30">
+                        <div class="post-thumbnail">
+                            <a href="post-details.html">
+
+                                <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData!, blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="Post Images">
+
+                            </a>
+                            @*<a class="video-popup icon-color-secondary size-medium position-top-center" href="post-details.html"><span class="play-icon"></span></a>*@
+                        </div>
+                        <div class="post-content">
+                            <div class="post-cat">
+                                <div class="post-cat-list">
+                                    <a class="hover-flip-item-wrapper" asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
+                                        <span class="hover-flip-item">
+                                            <span data-text="@blogPost.Category!.Name">@blogPost.Category.Name</span>
+                                        </span>
+                                    </a>
                                 </div>
-                                <div class="col">
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th>
-                                                        Title
-                                                    </th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach (BlogPost blogPost in await _BlogPostService.GetPopularBlogPostAsync(4))
-                                                {
-                                                    <tr>
-
-                                                        <td class="col-5">
-                                                            @* Show Image *@
-                                                            <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
-                                                                <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData!,blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="">
-                                                            </a>
-
-                                                        </td>
-                                                        <td class="col-7">
-                                                            <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug"> @blogPost.Title</a>
-                                                        </td>
-
-
-                                                    </tr>
-                                                }
-                                            </tbody>
-                                        </table>
-                                        <div class="row row-cols-1 g-5">
-                                            <div class="col text-center">
-                                                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-                                            </div>
-                                            <div class="col justify-content-center">
-                                                @Html.PagedListPager(Model, pageNum => Url.Action("PopularIndex", new { pageNum, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }),
-                                                new PagedListRenderOptions
-                                                {
-                                                LiElementClasses = new string[] { "page-item" },
-                                                PageClasses = new string[] { "page-link" }
-                                                })
-                                            </div>
-                                        </div>
+                            </div>
+                            <h4 class="title">
+                                <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
+                                    @blogPost.Title
+                                </a>
+                            </h4>
+                            <div class="post-meta-wrapper">
+                                <div class="post-meta">
+                                    <div class="content">
+                                        <h6 class="post-author-name">
+                                            <a class="hover-flip-item-wrapper" asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
+                                                <span class="hover-flip-item">
+                                                    <span data-text="Jacob Lynch">Jacob Lynch</span>
+                                                </span>
+                                            </a>
+                                        </h6>
+                                        <ul class="post-meta-list">
+                                            <li>@blogPost.Created.ToString("MMM dd, yyyy")</li>
+                                            <li>@blogPost.Comments.Count Comments</li>
+                                        </ul>
                                     </div>
                                 </div>
+                                @*<ul class="social-share-transparent justify-content-end">
+                                    <li><a href="#"><i class="fas fa-link"></i></a></li>
+                                </ul>*@
                             </div>
                         </div>
                     </div>
+                    <!-- End Post List  -->
+                }
+            </div>
+            <div class="col-lg-4 col-xl-4 mt_md--40 mt_sm--40">
+                <!-- Start Sidebar Area  -->
+                <div class="sidebar-inner">
+
+                    <!-- Start Single Widget  -->
+                    <div class="axil-single-widget widget widget_categories mb--30">
+                        <ul>
+                            @foreach (Category category in (await _BlogPostService.GetCategoriesAsync()).Take(4))
+                            {
+                                <li class="cat-item">
+                                    <a href="#" class="inner">
+                                        <div class="thumbnail">
+
+                                            <img src="@_ImageService.ConvertByteArrayToFile(category.ImageData!,category.ImageType!,(int)DefaultImage.Category)" alt="">
+
+                                        </div>
+                                        <div class="content">
+                                            <h5 class="title">@category.Name</h5>
+                                        </div>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <!-- End Single Widget  -->
+                    <!-- Start Single Widget  -->
+                    <div class="axil-single-widget widget widget_search mb--30">
+                        <h5 class="widget-title">Search</h5>
+                        <form class="header-search-form d-sm-block d-none" asp-controller="BlogPosts" asp-action="SearchIndex">
+                            <div class="axil-search form-group">
+                                <button type="submit" class="search-button"><i class="fal fa-search"></i></button>
+                                <input type="text" class="form-control" placeholder="Search" name="SearchTerm" id="SearchTerm">
+                            </div>
+                        </form>
+                        <div class="mobile-search-wrapper d-sm-none d-block">
+                            <button class="search-button"><i class="fal fa-search"></i></button>
+                            <form class="header-search-form">
+                                <div class="axil-search form-group">
+                                    <button type="submit" class="search-button"><i class="fal fa-search"></i></button>
+                                    <input type="text" class="form-control" placeholder="Search">
+                                </div>
+                            </form>
+                        </div>
+                        <!-- End Single Widget  -->
+                        <!-- Start Single Widget  -->
+                        <div class="axil-single-widget widget widget_postlist mb--30">
+                            <h5 class="widget-title">Popular on Blogar</h5>
+                            <!-- Start Post List  -->
+                            <div class="post-medium-block">
+                                @foreach (BlogPost blogPost in await _BlogPostService.GetPopularBlogPostAsync(3))
+                                {
+                                    <!-- Start Single Post  -->
+                                    <div class="content-block post-medium mb--20">
+                                        <div class="post-thumbnail">
+                                            <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
+
+                                                <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData!,blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="Post Images">
+
+                                            </a>
+                                        </div>
+                                        <div class="post-content">
+                                            <h6 class="title">
+                                                <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
+                                                    @blogPost.Title
+                                                </a>
+                                            </h6>
+                                            <div class="post-meta">
+                                                <ul class="post-meta-list">
+                                                    <li>@blogPost.Created.ToString("MMM dd, yyyy")</li>
+                                                    <li>@blogPost.Comments.Count Comments</li>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Single Post  -->
+                                }
+
+                            </div>
+                            <!-- End Post List  -->
+
+                        </div>
+                        <!-- End Single Widget  -->
+                        <!-- Start Single Widget  -->
+                        <div class="axil-single-widget widget widget_social mb--30">
+                            <h5 class="widget-title">Stay In Touch</h5>
+                            <!-- Start Post List  -->
+                            <ul class="social-icon md-size justify-content-center">
+                                <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                            </ul>
+                            <!-- End Post List  -->
+                        </div>
+                        <!-- End Single Widget  -->
+                        <!-- Start Single Widget  -->
+                        <div class="axil-single-widget widget widget_instagram mb--30">
+                            <h5 class="widget-title">Recent</h5>
+                            <!-- Start Post List  -->
+                            <ul class="instagram-post-list-wrapper">
+                                @foreach (BlogPost blogPost in await _BlogPostService.GetRecentBlogPostsAsync(6))
+                                {
+                                    <li class="instagram-post-list">
+                                        <a asp-action="Details" asp-controller="BlogPosts" asp-route-slug="@blogPost.Slug">
+
+                                            <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData!,blogPost.ImageType!,(int)DefaultImage.BlogPost)" alt="">
+
+                                        </a>
+                                    </li>
+
+                                }
+                            </ul>
+                            <!-- End Post List  -->
+                        </div>
+                        <!-- End Single Widget  -->
+                    </div>
+                    <!-- End Sidebar Area  -->
+
                 </div>
-                <!-- End Blog Details  -->
             </div>
         </div>
     </div>
 </div>
-<!-- End Post Single Wrapper  -->
+
+<!-- End Post List Wrapper  -->
+<!-- Start Instagram Area  -->
+<@*div class="axil-instagram-area axil-section-gap bg-color-grey">
+       <div class="container">
+       <div class="row">
+       <div class="col-lg-12">
+       <div class="section-title">
+       <h2 class="title">Instagram</h2>
+       </div>
+       </div>
+       </div>
+       <div class="row mt--30">
+       <div class="col-lg-12">*@
+       @* do something here*@
+       @* <ul class="instagram-post-list">
+       @foreach (BlogPost blogPost in await _BlogPostService.GetRecentBlogPostsAsync(6))
+       {
+       <li class="instagram-post-list">
+       <a href="#">
+       @if (blogPost.ImageData != null)
+       {
+       <img src="@_ImageService.ConvertByteArrayToFile(blogPost.ImageData,blogPost.ImageType!)" alt="">
+       }
+       else
+       {
+       <img src="~/img/DefaultContactImage.png" alt="">
+       }
+       </a>
+       </li>
+       }
+       </ul>*@
+       @* </div>
+       </div>
+       </div>
+       </div>*@
+<!-- End Instagram Area  -->

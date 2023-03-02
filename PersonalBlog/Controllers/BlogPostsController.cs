@@ -37,7 +37,6 @@ namespace PersonalBlog.Controllers
         // GET: BlogPosts
         public async Task<IActionResult> Index()
         {
-
             //todo: use service
 
             var applicationDbContext = await _context.BlogPosts.ToListAsync();
